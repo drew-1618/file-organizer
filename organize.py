@@ -22,10 +22,12 @@ def setup_parser():
     parser.add_argument('--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
     # Optional flag for minimum file size in MB
     parser.add_argument('--min-size-mb', type=int, metavar='MB', default=0, help='Only organize files larger than specified size in MB')
+    # Optional flag for date prefixing
+    parser.add_argument('--date-prefix', type=str, metavar='TYPE', default=None, help='Prefix files with their creation or modification date (YYYY-MM-DD_)')
     return parser
 
 
-def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=0):
+def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=0, date_prefix=None):
     source_path = Path(source_dir)
     if not source_path.is_dir():
         print(f"Error: {source_dir} is not a valid directory.")
@@ -43,40 +45,54 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
         min_size_bytes = min_size_mb * 1024 * 1024   # 1 MB = 1024 KB * 1024 Bytes
         print(f"Minimum size filter: Active. Organizing files >= {min_size_mb} MB.")
 
+    if date_prefix == 'modified':
+        print("Date prefixing: Active. Files will be prefixed with their modification date.")
+    elif date_prefix == 'created':
+        print("Date prefixing: Active. Files will be prefixed with their creation date.")
+    # else:
+    #     print("Date prefixing: Inactive.")
+
     for item in source_path.iterdir():
         if item.is_file() and not item.name.startswith('.'):
             extension = item.suffix.lower().lstrip('.')
             target_folder_name = FILE_TYPE_MAP.get(extension, 'Miscellaneous') 
-
             date_modified = datetime.fromtimestamp(item.stat().st_mtime)
-            if archive_threshold is not None and date_modified < archive_threshold:
-                target_folder_name = f"{target_folder_name}/Archive"
+            final_file_name = item.name
 
             if min_size_bytes is not None and item.stat().st_size < min_size_bytes:
                 print(f"[SKIP] {item.name} (size below {min_size_mb} MB)")
                 continue
 
+            if archive_threshold is not None and date_modified < archive_threshold:
+                target_folder_name = f"{target_folder_name}/Archive"
+
+            if date_prefix in ('modified', 'created'):
+                date_to_use = date_modified if date_prefix == 'modified' else datetime.fromtimestamp(item.stat().st_ctime)
+                date_str = date_to_use.strftime('%Y-%m-%d_')
+                final_file_name = f"{date_str}{item.name}"
+
             target_folder = source_path / target_folder_name
-            target_path = target_folder / item.name
+            target_path = target_folder / final_file_name
 
             if not target_folder.exists() and not dry_run:
                 target_folder.mkdir(parents=True)
                 print(f"[ACTION] Created directory: {target_folder_name}/")
 
             if not dry_run:
+                final_stem, final_suffix = Path(final_file_name).stem, Path(final_file_name).suffix
                 try:
                     duplicate_count = 1
                     while target_path.exists():
-                        target_path = target_folder / f"{item.stem}_{duplicate_count}{item.suffix}"
+                        target_path = target_folder / f"{final_stem}_{duplicate_count}{final_suffix}"
                         duplicate_count += 1
                     shutil.move(str(item), str(target_path))
-                    print(f"[MOVE] {item.name} -> {target_folder_name}/")
+                    print(f"[MOVE] {final_file_name} -> {target_folder_name}/")
                 except Exception as e:
-                    print(f"[ERROR] Could not move {item.name}. Reason: {e}")
+                    print(f"[ERROR] Could not move {final_file_name}. Reason: {e}")
             else:
-                print(f"[DRY-RUN] Would move {item.name} -> {target_folder_name}/")
+                print(f"[DRY-RUN] Would move {final_file_name} -> {target_folder_name}/")
 
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    organize_files(args.source_dir, args.dry_run, args.archive_older_than, args.min_size_mb)
+    organize_files(args.source_dir, args.dry_run, args.archive_older_than, args.min_size_mb, args.date_prefix)
