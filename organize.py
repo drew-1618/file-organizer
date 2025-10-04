@@ -39,23 +39,28 @@ def setup_parser():
     parser.add_argument('-d', '--dry-run', action='store_true', help='Simulate the organization without making changes')
     # Optional flag for archiving files older than specified days
     parser.add_argument('--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
+    # Optional flag for minimum file size in MB
+    parser.add_argument('--min-size-mb', type=int, metavar='MB', default=0, help='Only organize files larger than specified size in MB')
     return parser
 
 
-def organize_files(source_dir, dry_run=False, archive_older_than=0):
+def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=0):
     source_path = Path(source_dir)
     if not source_path.is_dir():
         print(f"Error: {source_dir} is not a valid directory.")
         sys.exit(1)
 
     archive_threshold = None
+    min_size_bytes = None
 
     if archive_older_than > 0:
         current_time = datetime.now()
         archive_threshold = current_time - timedelta(days=archive_older_than)
         print(f"Archive mode: Active. Files modified before {archive_threshold.strftime('%Y-%m-%d %H:%M')} will be archived.")
 
-        
+    if min_size_mb > 0:
+        min_size_bytes = min_size_mb * 1024 * 1024   # 1 MB = 1024 KB * 1024 Bytes
+        print(f"Minimum size filter: Active. Organizing files >= {min_size_mb} MB.")
 
     for item in source_path.iterdir():
         if item.is_file() and not item.name.startswith('.'):
@@ -65,6 +70,10 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0):
             date_modified = datetime.fromtimestamp(item.stat().st_mtime)
             if archive_threshold is not None and date_modified < archive_threshold:
                 target_folder_name = f"{target_folder_name}/Archive"
+
+            if min_size_bytes is not None and item.stat().st_size < min_size_bytes:
+                print(f"[SKIP] {item.name} (size below {min_size_mb} MB)")
+                continue
 
             target_folder = source_path / target_folder_name
             target_path = target_folder / item.name
@@ -89,5 +98,4 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0):
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    organize_files(args.source_dir, args.dry_run, args.archive_older_than)
-
+    organize_files(args.source_dir, args.dry_run, args.archive_older_than, args.min_size_mb)
