@@ -3,29 +3,10 @@ import shutil
 from pathlib import Path
 import sys
 from datetime import datetime, timedelta
+import json
 
-FILE_TYPE_MAP = {
-    # Images
-    'jpg': 'Images', 'jpeg': 'Images', 'png': 'Images', 
-    'gif': 'Images', 'bmp': 'Images', 'tiff': 'Images',
-    'svg': 'Images',
-    # Documents
-    'pdf': 'Documents', 'doc': 'Documents', 'docx': 'Documents',
-    'txt': 'Documents', 'xls': 'Documents', 'xlsx': 'Documents',
-    'ppt': 'Documents', 'pptx': 'Documents', 'odt': 'Documents',
-    # Audio
-    'mp3': 'Audio', 'wav': 'Audio', 'aac': 'Audio',
-    'flac': 'Audio', 'ogg': 'Audio', 'm4a': 'Audio',
-    # Videos
-    'mp4': 'Videos', 'avi': 'Videos', 'mkv': 'Videos',
-    'mov': 'Videos', 'wmv': 'Videos', 'flv': 'Videos',
-    # Archives
-    'zip': 'Archives', 'rar': 'Archives', 'tar': 'Archives',
-    'gz': 'Archives', '7z': 'Archives',
-    # Scripts
-    'py': 'Scripts', 'js': 'Scripts', 'sh': 'Scripts',
-    'bat': 'Scripts', 'pl': 'Scripts', 'rb': 'Scripts'
-}
+with open('config.json', 'r') as f:
+    FILE_TYPE_MAP = json.load(f)
 
 def setup_parser():
     # may need to update the epilog with more examples

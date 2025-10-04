@@ -1,0 +1,23 @@
+{
+    "_README_": "All file extensions must be lowercase and without a leading dot.",
+    
+    "jpg": "Images", "jpeg": "Images", "png": "Images", 
+    "gif": "Images", "bmp": "Images", "tiff": "Images",
+    "svg": "Images",
+
+    "pdf": "Documents", "doc": "Documents", "docx": "Documents",
+    "txt": "Documents", "xls": "Documents", "xlsx": "Documents",
+    "ppt": "Documents", "pptx": "Documents", "odt": "Documents",
+
+    "mp3": "Audio", "wav": "Audio", "aac": "Audio",
+    "flac": "Audio", "ogg": "Audio", "m4a": "Audio",
+
+    "mp4": "Videos", "avi": "Videos", "mkv": "Videos",
+    "mov": "Videos", "wmv": "Videos", "flv": "Videos",
+
+    "zip": "Archives", "rar": "Archives", "tar": "Archives",
+    "gz": "Archives", "7z": "Archives",
+
+    "py": "Scripts", "js": "Scripts", "sh": "Scripts",
+    "bat": "Scripts", "pl": "Scripts", "rb": "Scripts"
+}
