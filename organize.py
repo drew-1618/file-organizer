@@ -75,6 +75,10 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0):
 
             if not dry_run:
                 try:
+                    duplicate_count = 1
+                    while target_path.exists():
+                        target_path = target_folder / f"{item.stem}_{duplicate_count}{item.suffix}"
+                        duplicate_count += 1
                     shutil.move(str(item), str(target_path))
                     print(f"[MOVE] {item.name} -> {target_folder_name}/")
                 except Exception as e:
