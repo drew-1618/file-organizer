@@ -4,9 +4,17 @@ from pathlib import Path
 import sys
 from datetime import datetime, timedelta
 import json
+import logging
 
-with open('config.json', 'r') as f:
+CONFIG_FILE = 'config.json'
+LOGGING_FILE = 'organizer.log'
+with open(CONFIG_FILE, 'r') as f:
     FILE_TYPE_MAP = json.load(f)
+logging.basicConfig(
+    filename=LOGGING_FILE,
+    level=logging.INFO,
+    filemode='w',
+    format='%(asctime)s - %(levelname)s - %(message)s')
 
 def setup_parser():
     # may need to update the epilog with more examples
@@ -31,6 +39,7 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
     source_path = Path(source_dir)
     if not source_path.is_dir():
         print(f"Error: {source_dir} is not a valid directory.")
+        logging.error(f"{source_dir} is not a directory.")
         sys.exit(1)
 
     archive_threshold = None
@@ -39,18 +48,18 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
     if archive_older_than > 0:
         current_time = datetime.now()
         archive_threshold = current_time - timedelta(days=archive_older_than)
-        print(f"Archive mode: Active. Files modified before {archive_threshold.strftime('%Y-%m-%d %H:%M')} will be archived.")
+        logging.info(f"Archive mode: Active. Files modified before {archive_threshold.strftime('%Y-%m-%d %H:%M')} will be archived.")
 
     if min_size_mb > 0:
         min_size_bytes = min_size_mb * 1024 * 1024   # 1 MB = 1024 KB * 1024 Bytes
-        print(f"Minimum size filter: Active. Organizing files >= {min_size_mb} MB.")
+        logging.info(f"Minimum size filter: Active. Organizing files >= {min_size_mb} MB.")
 
     if date_prefix == 'modified':
-        print("Date prefixing: Active. Files will be prefixed with their modification date.")
+        logging.info("Date prefixing: Active. Files will be prefixed with their modification date.")
     elif date_prefix == 'created':
-        print("Date prefixing: Active. Files will be prefixed with their creation date.")
-    # else:
-    #     print("Date prefixing: Inactive.")
+        logging.info("Date prefixing: Active. Files will be prefixed with their creation date.")
+    else:
+        logging.error(f"Invalid date type '{date_prefix}'. Renaming feature disabled for this session.")
 
     for item in source_path.iterdir():
         if item.is_file() and not item.name.startswith('.'):
@@ -60,7 +69,7 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
             final_file_name = item.name
 
             if min_size_bytes is not None and item.stat().st_size < min_size_bytes:
-                print(f"[SKIP] {item.name} (size below {min_size_mb} MB)")
+                logging.info(f"Skipping {item.name} (size below {min_size_mb} MB).")
                 continue
 
             if archive_threshold is not None and date_modified < archive_threshold:
@@ -76,7 +85,7 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
 
             if not target_folder.exists() and not dry_run:
                 target_folder.mkdir(parents=True)
-                print(f"[ACTION] Created directory: {target_folder_name}/")
+                logging.info(f"Created directory: {target_folder_name}/")
 
             if not dry_run:
                 final_stem, final_suffix = Path(final_file_name).stem, Path(final_file_name).suffix
@@ -86,11 +95,11 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
                         target_path = target_folder / f"{final_stem}_{duplicate_count}{final_suffix}"
                         duplicate_count += 1
                     shutil.move(str(item), str(target_path))
-                    print(f"[MOVE] {final_file_name} -> {target_folder_name}/")
+                    logging.info(f"Moving {final_file_name} -> {target_folder_name}/")
                 except Exception as e:
-                    print(f"[ERROR] Could not move {final_file_name}. Reason: {e}")
+                    logging.error(f"Could not move {final_file_name}. Reason: {e}")
             else:
-                print(f"[DRY-RUN] Would move {final_file_name} -> {target_folder_name}/")
+                logging.info(f"[DRY-RUN] Would move {final_file_name} -> {target_folder_name}/")
 
 if __name__ == "__main__":
     parser = setup_parser()
