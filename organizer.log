@@ -1,0 +1,4 @@
+2025-10-04 18:58:36,850 - INFO - Archive mode: Active. Files modified before 2025-09-04 18:58 will be archived.
+2025-10-04 18:58:36,850 - INFO - Minimum size filter: Active. Organizing files >= 35 MB.
+2025-10-04 18:58:36,850 - ERROR - Invalid date type 'None'. Renaming feature disabled for this session.
+2025-10-04 18:58:36,851 - INFO - Moving large_file.png -> Images/

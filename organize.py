@@ -35,7 +35,7 @@ def setup_parser():
     return parser
 
 
-def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=0, date_prefix=None):
+def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=0, date_prefixing=None):
     source_path = Path(source_dir)
     if not source_path.is_dir():
         print(f"Error: {source_dir} is not a valid directory.")
@@ -54,12 +54,12 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
         min_size_bytes = min_size_mb * 1024 * 1024   # 1 MB = 1024 KB * 1024 Bytes
         logging.info(f"Minimum size filter: Active. Organizing files >= {min_size_mb} MB.")
 
-    if date_prefix == 'modified':
+    if date_prefixing == 'modified':
         logging.info("Date prefixing: Active. Files will be prefixed with their modification date.")
-    elif date_prefix == 'created':
+    elif date_prefixing == 'created':
         logging.info("Date prefixing: Active. Files will be prefixed with their creation date.")
     else:
-        logging.error(f"Invalid date type '{date_prefix}'. Renaming feature disabled for this session.")
+        logging.error(f"Invalid date type '{date_prefixing}'. Renaming feature disabled for this session.")
 
     for item in source_path.iterdir():
         if item.is_file() and not item.name.startswith('.'):
@@ -75,10 +75,22 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
             if archive_threshold is not None and date_modified < archive_threshold:
                 target_folder_name = f"{target_folder_name}/Archive"
 
-            if date_prefix in ('modified', 'created'):
-                date_to_use = date_modified if date_prefix == 'modified' else datetime.fromtimestamp(item.stat().st_ctime)
+
+            if date_prefixing is not None:
+                if date_prefixing == 'modified':
+                    date_to_use = date_modified
+                    logging.info("Date prefixing: Active (Modification Date).")
+                elif date_prefixing == 'created':
+                    date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
+                    logging.info("Date prefixing: Active (Creation Date).")
+                else:
+                    logging.error(f"Invalid date type '{date_prefixing}'. Renaming feature disabled for this item.")
+                    date_to_use = None
+
+
+            if date_to_use is not None:
                 date_str = date_to_use.strftime('%Y-%m-%d_')
-                final_file_name = f"{date_str}{item.name}"
+                final_file_name = f"{date_str}{final_file_name}"
 
             target_folder = source_path / target_folder_name
             target_path = target_folder / final_file_name
@@ -104,4 +116,4 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    organize_files(args.source_dir, args.dry_run, args.archive_older_than, args.min_size_mb, args.date_prefix)
+    organize_files(args.source_dir, args.dry_run, args.archive_older_than, args.min_size_mb, args.date_prefixing)
