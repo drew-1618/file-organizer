@@ -35,6 +35,7 @@ def setup_parser():
     )
     parser.add_argument('source_dir', help='Directory to organize')
     parser.add_argument('-d', '--dry-run', action='store_true', help='Simulate the organization without making changes')
+    parser.add_argument('--in-place', action='store_true', help='Apply rules without re-categorizing files (useful for pre-organized folders)')
     parser.add_argument('--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
     parser.add_argument('--min-size-mb', type=int, metavar='MB', default=0, help='Only organize files larger than specified size in MB')
     parser.add_argument('--date-prefixing', type=str, metavar='TYPE', default=None, help='Prefix files with their creation or modification date (YYYY-MM-DD_)')
@@ -153,7 +154,7 @@ def _execute_move(item, target_folder, target_path, final_folder_name, final_fil
         logging.info(f"[DRY-RUN] Would move {item.name} -> {final_folder_name}/{final_file_name}")
 
 
-def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=0, date_prefixing=None, deduping=False, delete_duplicates=False):
+def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than=0, min_size_mb=0, date_prefixing=None, deduping=False, delete_duplicates=False):
     """Core logic to orchestrate file filtering, transformation, and execution."""
     source_path = Path(source_dir)
     if not source_path.is_dir():
@@ -162,6 +163,8 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
         sys.exit(1)
 
     logging.info(f"Starting organization in: {source_dir}")
+    if in_place:
+        logging.info("In-place mode: Active. Files will not be re-categorized, only processed with selected rules.")
 
     hashes_seen = set()
     min_size_bytes = None
@@ -194,7 +197,17 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
         else:
             logging.info("Deduplication with deletion: Active. Duplicate files will be deleted.")
 
+    if not in_place:
+        category_folders = set(FILE_TYPE_MAP.values())
+        category_folders.add('Miscellaneous')
+        category_folders.add('Archive')
+
     for item in source_path.iterdir():
+        # Skip category folders
+        if not in_place and item.name in category_folders and item.is_dir():
+            logging.info(f"Skipping category folder: {item.name}/")
+            continue
+
         if item.is_file() and not item.name.startswith('.'):
 
             # Size Check
@@ -202,14 +215,39 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
                 logging.info(f"Skipping {item.name} (size below {min_size_mb} MB).")
                 continue
 
-            target_folder_name, final_file_name, date_modified = _get_target_names(item, date_prefixing)
-            final_folder_name = _handle_archiving(target_folder_name, date_modified, archive_threshold)
+            if in_place:
+                target_folder_name = item.parent.name if item.parent != source_path else '.'
+                final_file_name = item.name
+                date_modified = datetime.fromtimestamp(item.stat().st_mtime)
 
-            # Define paths using the final, transformed folder name
-            target_folder = source_path / final_folder_name
+                if date_prefixing in ('modified', 'created'):
+                    date_to_use = None
+                    if date_prefixing == 'modified':
+                        date_to_use = date_modified
+                    elif date_prefixing == 'created':
+                        date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
+                    
+                    if date_to_use is not None:
+                        date_str = date_to_use.strftime('%Y-%m-%d_')
+                        final_file_name = f"{date_str}{final_file_name}"
+            else:
+                target_folder_name, final_file_name, date_modified = _get_target_names(item, date_prefixing)
+
+            final_folder_path = _handle_archiving(target_folder_name, date_modified, archive_threshold)
+
+            if in_place:
+                if 'Archive' in str(final_folder_path):
+                    target_folder = source_path / 'Archive'
+                else:
+                    target_folder = source_path
+            else:
+                # normal 
+                target_folder = source_path / final_folder_path
+
             target_path = target_folder / final_file_name
 
-            final_file_name = str(final_folder_name)  # For logging purposes
+            # Convert to string for logging
+            final_folder_name = str(final_folder_path) if not in_place else (target_folder.name if target_folder != source_path else '.')
 
             if not target_folder.exists() and not dry_run:
                 target_folder.mkdir(parents=True, exist_ok=True)
@@ -222,7 +260,8 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
                     continue
             
             # Move File
-            _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run)
+            if target_path != item:
+                _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run)
 
     logging.info("Organization complete.")
 
@@ -230,5 +269,5 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    organize_files(args.source_dir, args.dry_run, args.archive_older_than, args.min_size_mb,
+    organize_files(args.source_dir, args.dry_run, args.in_place, args.archive_older_than, args.min_size_mb,
                    args.date_prefixing, args.deduping, args.delete_duplicates)
