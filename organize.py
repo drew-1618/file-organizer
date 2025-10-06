@@ -56,27 +56,31 @@ def calculate_file_hash(file_path, hash_algo='md5'):
         return ""
     return file_hash.hexdigest()
 
+
 # --- Helper Functions ---
+
+def _apply_date_prefix(item, file_name, date_prefixing):
+    """Applies date prefixing to the filename if specified."""
+    if date_prefixing not in ('modified', 'created'):
+        return file_name # No change
+        
+    if date_prefixing == 'modified':
+        date_modified = datetime.fromtimestamp(item.stat().st_mtime)
+    else: # created
+        date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
+
+    date_str = date_to_use.strftime('%Y-%m-%d_')
+    return f"{date_str}{file_name}"
+
 
 def _get_target_names(item, date_prefixing):
     """Determines the base folder name and applies date prefixing to the filename."""
     extension = item.suffix.lower().lstrip('.')
     target_folder_name = FILE_TYPE_MAP.get(extension, 'Miscellaneous') 
-    date_modified = datetime.fromtimestamp(item.stat().st_mtime)
     final_file_name = item.name
+    date_modified = datetime.fromtimestamp(item.stat().st_mtime)
 
-    if date_prefixing in ('modified', 'created'):
-        date_to_use = None
-        if date_prefixing == 'modified':
-            date_to_use = date_modified
-        elif date_prefixing == 'created':
-            date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
-        
-        # Apply the renaming prefix
-        if date_to_use is not None:
-            date_str = date_to_use.strftime('%Y-%m-%d_')
-            final_file_name = f"{date_str}{final_file_name}"
-            
+    final_file_name = _apply_date_prefix(item, final_file_name, date_prefixing)        
     return target_folder_name, final_file_name, date_modified
 
 
@@ -219,17 +223,8 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
                 target_folder_name = item.parent.name if item.parent != source_path else '.'
                 final_file_name = item.name
                 date_modified = datetime.fromtimestamp(item.stat().st_mtime)
-
-                if date_prefixing in ('modified', 'created'):
-                    date_to_use = None
-                    if date_prefixing == 'modified':
-                        date_to_use = date_modified
-                    elif date_prefixing == 'created':
-                        date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
-                    
-                    if date_to_use is not None:
-                        date_str = date_to_use.strftime('%Y-%m-%d_')
-                        final_file_name = f"{date_str}{final_file_name}"
+                # Apply date prefixing if needed
+                final_file_name = _apply_date_prefix(item, final_file_name, date_prefixing)
             else:
                 target_folder_name, final_file_name, date_modified = _get_target_names(item, date_prefixing)
 
