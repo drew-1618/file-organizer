@@ -12,7 +12,6 @@ CHUNK_SIZE = 65536   # 64KB
 CONFIG_FILE = 'config.json'
 LOGGING_FILE = 'organizer.log'
 
-# --- Global Setup: Runs once on import ---
 try:
     with open(CONFIG_FILE, 'r') as f:
         FILE_TYPE_MAP = json.load(f)
@@ -56,7 +55,7 @@ def calculate_file_hash(file_path, hash_algo='md5'):
         return ""
     return file_hash.hexdigest()
 
-# --- Helper Functions (Refactored Logic) ---
+# --- Helper Functions ---
 
 def _get_target_names(item, date_prefixing):
     """Determines the base folder name and applies date prefixing to the filename."""
@@ -89,7 +88,7 @@ def _handle_archiving(target_folder_name, date_modified, archive_threshold):
 
 def _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping, delete_duplicates, dry_run):
     """
-    Performs content-based deduping checks (Source-to-Source and Source-to-Target).
+    Performs content-based deduping checks.
     Returns True if file should be skipped/deleted.
     """
     if not deduping:
@@ -102,7 +101,7 @@ def _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping
 
     target_path = target_folder / final_file_name
     
-    # 1. Source-to-Source Check (Has this hash been seen earlier in this run?)
+    # Source-to-Source Check (Has this hash been seen earlier in this run?)
     if source_hash in hashes_seen:
         action = "Deleted" if delete_duplicates and not dry_run else "Skipped"
         if delete_duplicates and not dry_run:
@@ -116,7 +115,7 @@ def _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping
         
     hashes_seen.add(source_hash)
 
-    # 2. Source-to-Target Check (Does a copy exist at the destination path?)
+    # Source-to-Target Check (Does a copy exist at the destination path?)
     if target_path.exists():
         target_hash = calculate_file_hash(target_path)
         if source_hash == target_hash:
@@ -137,8 +136,6 @@ def _execute_move(item, target_folder, target_path, final_folder_name, final_fil
     """
     Handles folder creation, name conflict resolution, and the file move/dry-run.
     """
-    
-    # Execution (Guarded by dry_run)
     if not dry_run:
         final_stem, final_suffix = Path(final_file_name).stem, Path(final_file_name).suffix
         try:
@@ -148,7 +145,6 @@ def _execute_move(item, target_folder, target_path, final_folder_name, final_fil
                 target_path = target_folder / f"{final_stem}_{duplicate_count}{final_suffix}"
                 duplicate_count += 1
             shutil.move(str(item), str(target_path))
-            # Log the original file name and the final location/new name
             logging.info(f"Moving {item.name} -> {target_path.name} in {final_folder_name}/")
         except Exception as e:
             logging.error(f"Could not move {item.name}. Reason: {e}")
@@ -201,15 +197,12 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
     for item in source_path.iterdir():
         if item.is_file() and not item.name.startswith('.'):
 
-            # 1. FILTER: Size Check
+            # Size Check
             if min_size_bytes is not None and item.stat().st_size < min_size_bytes:
                 logging.info(f"Skipping {item.name} (size below {min_size_mb} MB).")
                 continue
 
-            # 2. TRANSFORMATION: Categorization & Renaming
             target_folder_name, final_file_name, date_modified = _get_target_names(item, date_prefixing)
-            
-            # 3. TRANSFORMATION: Archiving
             final_folder_name = _handle_archiving(target_folder_name, date_modified, archive_threshold)
 
             # Define paths using the final, transformed folder name
@@ -222,18 +215,18 @@ def organize_files(source_dir, dry_run=False, archive_older_than=0, min_size_mb=
                 target_folder.mkdir(parents=True, exist_ok=True)
                 logging.info(f"Created directory: {final_folder_name}/")
             
-            # 4. SAFETY CHECK: Deduping
+            # 4. Deduping
             if deduping:
-                # Passed all necessary arguments
                 should_skip = _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping, delete_duplicates, dry_run)
                 if should_skip:
                     continue
             
-            # 5. EXECUTION: Move File
+            # Move File
             _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run)
 
     logging.info("Organization complete.")
 
+# --- Main Execution ---
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
