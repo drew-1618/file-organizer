@@ -36,7 +36,7 @@ def _apply_date_prefix(item, file_name, date_prefixing):
         return file_name # No change
         
     if date_prefixing == 'modified':
-        date_modified = datetime.fromtimestamp(item.stat().st_mtime)
+        date_to_use = datetime.fromtimestamp(item.stat().st_mtime)
     else: # created
         date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
 
