@@ -8,6 +8,7 @@
     "pdf": "Documents", "doc": "Documents", "docx": "Documents",
     "txt": "Documents", "xls": "Documents", "xlsx": "Documents",
     "ppt": "Documents", "pptx": "Documents", "odt": "Documents",
+    "csv": "Documents",
 
     "mp3": "Audio", "wav": "Audio", "aac": "Audio",
     "flac": "Audio", "ogg": "Audio", "m4a": "Audio",
