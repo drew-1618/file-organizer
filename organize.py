@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 import json
 import logging
 
+from run_stats import FileStats
+
 from file_manager import (
     calculate_file_hash,
     _get_target_names,
@@ -96,6 +98,8 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
         logging.info("In-place mode: Active. Files will not be re-categorized, only processed with selected rules.")
 
     hashes_seen = set()
+    # TODO: Integrate stats tracking
+    stats = FileStats()
     
     archive_threshold, min_size_bytes, date_prefixing, delete_duplicates = _prepare_run(
         archive_older_than,
