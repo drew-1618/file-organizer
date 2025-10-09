@@ -19,12 +19,12 @@ class FileStats:
             raise ValueError(f"Metric '{metric_name}' does not exist in FileStats.")
 
     def generate_report(self):
-        report = "----- File Organization Report -----"
-        report += f"\nTotal files processed: {self.total_processed}"
-        report += f"\nFiles moved: {self.files_moved}"
-        report += f"\nFiles deleted: {self.files_deleted}"
-        report += f"\nFiles skipped: {self.files_skipped}"
-        report += f"\nDirectories created: {self.directories_created}"
+        report = "\n----- File Organization Report -----"
+        report += f"\n\tTotal files processed: {self.total_processed}"
+        report += f"\n\tFiles moved: {self.files_moved}"
+        report += f"\n\tFiles deleted: {self.files_deleted}"
+        report += f"\n\tFiles skipped: {self.files_skipped}"
+        report += f"\n\tDirectories created: {self.directories_created}"
         report += "\n------------------------------------"
         logging.info(report)
         return report
