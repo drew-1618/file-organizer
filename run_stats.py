@@ -14,7 +14,7 @@ class FileStats:
         metric_name = metric_name.lower()
         if hasattr(self, metric_name):
             setattr(self, metric_name, getattr(self, metric_name) + 1)
-            self.total_processed += 1 if metric_name != "directories_created"
+            self.total_processed += 1 if metric_name != "directories_created" else 0
         else:
             raise ValueError(f"Metric '{metric_name}' does not exist in FileStats.")
 
