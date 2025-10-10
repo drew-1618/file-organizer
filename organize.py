@@ -8,6 +8,8 @@ import logging
 from run_stats import FileStats
 
 from file_manager import (
+    get_config,
+    CONFIG_FILE,
     calculate_file_hash,
     _get_target_names,
     _apply_date_prefix,
@@ -17,15 +19,9 @@ from file_manager import (
     _execute_move
 )
 
-CONFIG_FILE = 'config.json'
 LOGGING_FILE = 'organizer.log'
 
-try:
-    with open(CONFIG_FILE, 'r') as f:
-        FILE_TYPE_MAP = json.load(f)
-except FileNotFoundError:
-    print(f"FATAL ERROR: Configuration file '{CONFIG_FILE}' not found.")
-    sys.exit(1)
+FILE_TYPE_MAP = get_config(CONFIG_FILE)
 
 logging.basicConfig(
     filename=LOGGING_FILE,
@@ -157,6 +153,8 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
         if target_path != item:
             _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run)
 
+    # Summary Report
+    stats.generate_report()
     logging.info("Organization complete.")
 
 # --- Main Execution ---

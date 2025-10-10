@@ -1,10 +1,23 @@
 import hashlib
 import logging
 import shutil
+import json
 from datetime import datetime
 from pathlib import Path
+import sys
 
 CHUNK_SIZE = 65536   # 64KB
+CONFIG_FILE = 'config.json'
+
+def get_config(config_path):
+    """Loads configuration from a JSON file."""
+    try:
+        with open(config_path, 'r') as f:
+            FILE_TYPE_MAP = json.load(f)
+        return FILE_TYPE_MAP
+    except Exception as e:
+        logging.error(f"Failed to load config file: {e}")
+        sys.exit(1)
 
 def calculate_file_hash(file_path, hash_algo='md5'):
     """Calculates hash of a file efficiently by reading it in chunks."""
