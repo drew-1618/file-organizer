@@ -1,6 +1,7 @@
 from pathlib import Path
 import json
 from random import choice, randint, randbytes, uniform
+from shutil import rmtree
 from time import time
 import os
 import argparse
@@ -26,10 +27,17 @@ def setup_parser():
         epilog='Example usage: python3 generate_files.py sample_dir --num-files 20'
     )
     parser.add_argument('base_dir', help='Base directory to create sample files in')
-    parser.add_argument('--num-files', type=int, default=10, help='Number of sample files to generate (default: 10)')
+    parser.add_argument('-n', '--num-files', type=int, default=10, help='Number of sample files to generate (default: 10)')
+    parser.add_argument('--clean', action='store_true', help='Clean the base directory before generating files')
     return parser
 
-def generate_sample_files(base_dir, num_files=10):
+def generate_sample_files(base_dir, num_files=10, clean=False):
+    if clean:
+        try:
+            rmtree(base_dir)
+            print(f"Cleaned existing directory: {base_dir}")
+        except FileNotFoundError:
+            pass  # Directory does not exist, nothing to clean
     base_path = Path(base_dir)
     base_path.mkdir(parents=True, exist_ok=True)
 
@@ -53,4 +61,4 @@ def generate_sample_files(base_dir, num_files=10):
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    generate_sample_files(args.base_dir, args.num_files)
+    generate_sample_files(args.base_dir, args.num_files, args.clean)
