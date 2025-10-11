@@ -94,7 +94,6 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
         logging.info("In-place mode: Active. Files will not be re-categorized, only processed with selected rules.")
 
     hashes_seen = set()
-    # TODO: Integrate stats tracking
     stats = FileStats()
     
     archive_threshold, min_size_bytes, date_prefixing, delete_duplicates = _prepare_run(
@@ -115,17 +114,32 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
         if not _is_item_eligible(item, min_size_bytes, min_size_mb, category_folders if not in_place else set(), in_place):
             continue
 
+        try:
+            file_size = item.stat().st_size
+            file_extension = item.suffix
+            stats.add_file_data(file_size, file_extension)
+        except OSError:
+            # This handles rare cases where the file disappears between iterdir() and stat()
+            logging.warning(f"File vanished during processing: {item.name}. Skipping.")
+            stats.increment_count('files_skipped')
+            continue
+
+        # Initial target name and folder
         if in_place:
             target_folder_name = item.parent.name if item.parent != source_path else '.'
             final_file_name = item.name
+            original_file_name = final_file_name
             date_modified = datetime.fromtimestamp(item.stat().st_mtime)
             # Apply date prefixing if needed
             final_file_name = _apply_date_prefix(item, final_file_name, date_prefixing)
+            if final_file_name != original_file_name:
+                stats.increment_count('files_renamed')
         else:
             target_folder_name, final_file_name, date_modified = _get_target_names(item, date_prefixing, FILE_TYPE_MAP)
 
         final_folder_path = _handle_archiving(target_folder_name, date_modified, archive_threshold)
 
+        # Final target folder and path
         if in_place:
             if 'Archive' in str(final_folder_path):
                 target_folder = source_path / 'Archive'
@@ -143,15 +157,19 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
         if not target_folder.exists() and not dry_run:
             target_folder.mkdir(parents=True, exist_ok=True)
             logging.info(f"Created directory: {final_folder_name}/")
+            stats.increment_count('directories_created')
             
         if deduping:
-            should_skip = _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping, delete_duplicates, dry_run)
+            should_skip = _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping, delete_duplicates, dry_run, stats)
             if should_skip:
                 continue
             
         # Move File
         if target_path != item:
-            _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run)
+            _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run, stats)
+        else:
+            logging.info(f"File already in correct location: {item.name}. No action taken.")
+            stats.increment_count('files_skipped')
 
     # Summary Report
     stats.generate_report()
