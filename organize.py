@@ -38,12 +38,12 @@ def setup_parser():
     )
     parser.add_argument('source_dir', help='Directory to organize')
     parser.add_argument('-d', '--dry-run', action='store_true', help='Simulate the organization without making changes')
-    parser.add_argument('--in-place', action='store_true', help='Apply rules without re-categorizing files (useful for pre-organized folders)')
-    parser.add_argument('--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
-    parser.add_argument('--min-size-mb', type=int, metavar='MB', default=0, help='Only organize files larger than specified size in MB')
-    parser.add_argument('--date-prefixing', type=str, metavar='TYPE', default=None, help='Prefix files with their creation or modification date (YYYY-MM-DD_)')
-    parser.add_argument('--deduping', action='store_true', help='Enable deduplication based on file content hash')
-    parser.add_argument('--delete-duplicates', action='store_true', help='Delete duplicate files instead of skipping them (use with --deduping)')
+    parser.add_argument('-i', '--in-place', action='store_true', help='Apply rules without re-categorizing files (useful for pre-organized folders)')
+    parser.add_argument('-a', '--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
+    parser.add_argument('-m', '--min-size-mb', type=int, metavar='MB', default=0, help='Only organize files larger than specified size in MB')
+    parser.add_argument('-p', '--date-prefixing', type=str, metavar='TYPE', default=None, help='Prefix files with their creation or modification date (YYYY-MM-DD_)')
+    parser.add_argument('-D', '--deduping', action='store_true', help='Enable deduplication based on file content hash')
+    parser.add_argument('-k', '--delete-duplicates', action='store_true', help='Delete duplicate files instead of skipping them (use with --deduping)')
     return parser
 
 
