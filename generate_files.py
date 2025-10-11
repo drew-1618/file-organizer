@@ -28,16 +28,19 @@ def setup_parser():
     )
     parser.add_argument('base_dir', help='Base directory to create sample files in')
     parser.add_argument('-n', '--num-files', type=int, default=10, help='Number of sample files to generate (default: 10)')
-    parser.add_argument('--clean', action='store_true', help='Clean the base directory before generating files')
+    parser.add_argument('-c', '--clean', action='store_true', help='Clean the base directory before generating files')
+    parser.add_argument('-O', '--clean-only', action='store_true', help='Only clean the base directory without generating files')
     return parser
 
-def generate_sample_files(base_dir, num_files=10, clean=False):
-    if clean:
+def generate_sample_files(base_dir, num_files=10, clean=False, clean_only=False):
+    if clean or clean_only:
         try:
             rmtree(base_dir)
             print(f"Cleaned existing directory: {base_dir}")
         except FileNotFoundError:
             pass  # Directory does not exist, nothing to clean
+        if clean_only or num_files <= 0:
+            return
     base_path = Path(base_dir)
     base_path.mkdir(parents=True, exist_ok=True)
 
@@ -61,4 +64,4 @@ def generate_sample_files(base_dir, num_files=10, clean=False):
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    generate_sample_files(args.base_dir, args.num_files, args.clean)
+    generate_sample_files(args.base_dir, args.num_files, args.clean, args.clean_only)
