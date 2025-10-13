@@ -6,6 +6,7 @@ import json
 import logging
 
 from run_stats import FileStats
+from rule_engine import load_rules, find_matching_rule, RULES_FILE
 
 from file_manager import (
     get_config,
@@ -14,7 +15,6 @@ from file_manager import (
     _get_target_names,
     _apply_date_prefix,
     _handle_deduping,
-    _handle_archiving,
     _is_item_eligible,
     _execute_move
 )
@@ -39,7 +39,7 @@ def setup_parser():
     parser.add_argument('source_dir', help='Directory to organize')
     parser.add_argument('-d', '--dry-run', action='store_true', help='Simulate the organization without making changes')
     parser.add_argument('-i', '--in-place', action='store_true', help='Apply rules without re-categorizing files (useful for pre-organized folders)')
-    parser.add_argument('-a', '--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
+    ### parser.add_argument('-a', '--archive-older-than', type=int, metavar='DAYS', default=0, help='Archive files older than specified days')
     parser.add_argument('-m', '--min-size-mb', type=int, metavar='MB', default=0, help='Only organize files larger than specified size in MB')
     parser.add_argument('-p', '--date-prefixing', type=str, metavar='TYPE', default=None, help='Prefix files with their creation or modification date (YYYY-MM-DD_)')
     parser.add_argument('-D', '--deduping', action='store_true', help='Enable deduplication based on file content hash')
@@ -47,14 +47,8 @@ def setup_parser():
     return parser
 
 
-def _prepare_run(archive_older_than, min_size_mb, date_prefixing, deduping, delete_duplicates):
+def _prepare_run(min_size_mb, date_prefixing, deduping, delete_duplicates):
     min_size_bytes = None
-    archive_threshold = None
-    
-    if archive_older_than > 0:
-        current_time = datetime.now()
-        archive_threshold = current_time - timedelta(days=archive_older_than)
-        logging.info(f"Archive mode: Active. Files modified before {archive_threshold.strftime('%Y-%m-%d %H:%M')} will be archived.")
 
     if min_size_mb > 0:
         min_size_bytes = min_size_mb * 1024 * 1024   # 1 MB = 1024 KB * 1024 Bytes
@@ -78,10 +72,10 @@ def _prepare_run(archive_older_than, min_size_mb, date_prefixing, deduping, dele
         else:
             logging.info("Deduplication with deletion: Active. Duplicate files will be deleted.")
 
-    return archive_threshold, min_size_bytes, date_prefixing, delete_duplicates
+    return min_size_bytes, date_prefixing, delete_duplicates
 
 
-def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than=0, min_size_mb=0, date_prefixing=None, deduping=False, delete_duplicates=False):
+def organize_files(source_dir, dry_run=False, in_place=False, min_size_mb=0, date_prefixing=None, deduping=False, delete_duplicates=False):
     """Core logic to orchestrate file filtering, transformation, and execution."""
     source_path = Path(source_dir)
     if not source_path.is_dir():
@@ -95,9 +89,9 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
 
     hashes_seen = set()
     stats = FileStats()
+    custom_rules = load_rules(RULES_FILE)
     
-    archive_threshold, min_size_bytes, date_prefixing, delete_duplicates = _prepare_run(
-        archive_older_than,
+    min_size_bytes, date_prefixing, delete_duplicates = _prepare_run(
         min_size_mb,
         date_prefixing,
         deduping,
@@ -107,7 +101,6 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
     if not in_place:
         category_folders = set(FILE_TYPE_MAP.values())
         category_folders.add('Miscellaneous')
-        category_folders.add('Archive')
 
     for item in source_path.iterdir():
         
@@ -124,35 +117,51 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
             stats.increment_count('files_skipped')
             continue
 
-        # Initial target name and folder
-        if in_place:
-            target_folder_name = item.parent.name if item.parent != source_path else '.'
+
+        rule_action_delete = False
+        matching_rule = find_matching_rule(item, custom_rules)
+
+        if matching_rule:
+            rule_action = matching_rule['action']
+            target_folder_name = rule_action.get('move_to', target_folder_name if 'target_folder_name' in locals() else 'Miscellaneous')
             final_file_name = item.name
-            original_file_name = final_file_name
-            date_modified = datetime.fromtimestamp(item.stat().st_mtime)
-            # Apply date prefixing if needed
-            final_file_name = _apply_date_prefix(item, final_file_name, date_prefixing)
-            if final_file_name != original_file_name:
+
+            if 'rename_prefix' in rule_action:
+                prefix = rule_action['rename_prefix']
+                final_name = f"{prefix}{final_file_name}"
                 stats.increment_count('files_renamed')
-        else:
+
+            rule_action_delete = rule_action.get('delete_file', False)
+
+        else:  # Default extension-based logic
             target_folder_name, final_file_name, date_modified = _get_target_names(item, date_prefixing, FILE_TYPE_MAP)
 
-        final_folder_path = _handle_archiving(target_folder_name, date_modified, archive_threshold)
-
-        # Final target folder and path
-        if in_place:
-            if 'Archive' in str(final_folder_path):
-                target_folder = source_path / 'Archive'
+        if rule_action_delete:
+            if not dry_run:
+                try:
+                    item.unlink()
+                    stats.increment_count('files_deleted')
+                    logging.info(f"File {item.name} deleted by custom rule: {matching_rule.get('name', 'Unnamed Rule')}.")
+                except Exception as e:
+                    logging.error(f"Could not delete {item.name} via custom rule. Reason: {e}")
+                    stats.increment_count('files_skipped')
             else:
-                target_folder = source_path
-        else:
-            # normal 
-            target_folder = source_path / final_folder_path
+                logging.info(f"[DRY-RUN] Would delete {item.name} by custom rule: {matching_rule.get('name', 'Unnamed Rule')}.")
+                stats.increment_count('files_deleted')
+            continue  # Go to next item
 
+        if in_place:
+            target_folder = source_path
+        else:
+            target_folder = source_path / Path(target_folder_name)
+            
         target_path = target_folder / final_file_name
 
-        # Convert to string for logging
-        final_folder_name = str(final_folder_path) if not in_place else (target_folder.name if target_folder != source_path else '.')
+        # If the target is the same as the source path, use '.' for cleaner logging
+        if target_folder == source_path:
+             final_folder_name = '.'
+        else:
+             final_folder_name = str(target_folder.relative_to(source_path))
 
         if not target_folder.exists() and not dry_run:
             target_folder.mkdir(parents=True, exist_ok=True)
@@ -163,7 +172,7 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
             should_skip = _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping, delete_duplicates, dry_run, stats)
             if should_skip:
                 continue
-            
+
         # Move File
         if target_path != item:
             _execute_move(item, target_folder, target_path, final_folder_name, final_file_name, dry_run, stats)
@@ -179,5 +188,5 @@ def organize_files(source_dir, dry_run=False, in_place=False, archive_older_than
 if __name__ == "__main__":
     parser = setup_parser()
     args = parser.parse_args()
-    organize_files(args.source_dir, args.dry_run, args.in_place, args.archive_older_than, args.min_size_mb,
+    organize_files(args.source_dir, args.dry_run, args.in_place, args.min_size_mb,
                    args.date_prefixing, args.deduping, args.delete_duplicates)

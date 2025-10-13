@@ -54,6 +54,9 @@ def _apply_date_prefix(item, file_name, date_prefixing):
         date_to_use = datetime.fromtimestamp(item.stat().st_ctime)
 
     date_str = date_to_use.strftime('%Y-%m-%d_')
+    # Prevent double-prefixing
+    if file_name.startswith(date_str):
+        return file_name
     return f"{date_str}{file_name}"
 
 
@@ -105,13 +108,6 @@ def _handle_deduping(item, target_folder, final_file_name, hashes_seen, deduping
             return True
             
     return False
-
-
-def _handle_archiving(target_folder_name, date_modified, archive_threshold):
-    """Applies the archiving rule to the target folder name."""
-    if archive_threshold is not None and date_modified < archive_threshold:
-        return Path(target_folder_name) / "Archive"
-    return Path(target_folder_name)
 
 
 def _is_item_eligible(item, min_size_bytes, min_size_mb, category_folders, in_place):
