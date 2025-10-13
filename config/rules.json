@@ -1,0 +1,72 @@
+[
+    {
+        "name": "General Downloads: Videos",
+        "filters": {
+            "extensions": ["mp4", "mkv", "mov", "avi", "webm"],
+            "min_size_mb": 50
+        },
+        "action": {
+            "move": "Videos/Downloads",
+            "date_prefixing": "created"
+        }
+    },
+    {
+        "name": "General Downloads: Archives & Zips",
+        "filters": {
+            "extensions": ["zip", "rar", "7z", "tar", "gz"]
+        },
+        "action": {
+            "move": "Archives"
+        }
+    },
+    {
+        "name": "Documents & Spreadsheets",
+        "filters": {
+            "extensions": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "odt"]
+        },
+        "action": {
+            "move": "Documents"
+        }
+    },
+    {
+        "name": "High-Res Image Sorting",
+        "filters": {
+            "extensions": ["jpg", "jpeg", "png", "webp", "tif", "tiff"],
+            "min_size_mb": 2
+        },
+        "action": {
+            "move": "Images/Photos",
+            "date_prefixing": "created"
+        }
+    },
+    {
+        "name": "Old Document Archiving (Specific Folder Match)",
+        "filters": {
+            "extensions": ["pdf", "docx"],
+            "archive_older_than": 90,
+            "target_folder_match": "Documents"
+        },
+        "action": {
+            "move": "Documents/Archived_Old",
+            "date_prefixing": "modified"
+        }
+    },
+    {
+        "name": "Misc Installation Files",
+        "filters": {
+            "extensions": ["exe", "msi", "dmg", "pkg"]
+        },
+        "action": {
+            "move": "Installers"
+        }
+    },
+    {
+        "name": "Code and Scripts",
+        "filters": {
+            "extensions": ["py", "js", "html", "css", "md", "json", "yaml"]
+        },
+        "action": {
+            "move": "Code_Scripts"
+        }
+    }
+]
