@@ -131,21 +131,23 @@ def _execute_move(item, target_folder, target_path, final_folder_name, final_fil
     """
     Handles folder creation, name conflict resolution, and the file move/dry-run.
     """
+    final_stem, final_suffix = Path(final_file_name).stem, Path(final_file_name).suffix
+    final_target_path = target_path
+    duplicate_count = 1
+    # Name Conflict Resolution
+    while final_target_path.exists():
+        final_target_path = target_folder / f"{final_stem}_{duplicate_count}{final_suffix}"
+        duplicate_count += 1
+
     if not dry_run:
-        final_stem, final_suffix = Path(final_file_name).stem, Path(final_file_name).suffix
         try:
-            duplicate_count = 1
-            # Name Conflict Resolution
-            while target_path.exists():
-                target_path = target_folder / f"{final_stem}_{duplicate_count}{final_suffix}"
-                duplicate_count += 1
-            shutil.move(str(item), str(target_path))
-            logging.info(f"Moving {item.name} -> {target_path.name} in {final_folder_name}/")
+            shutil.move(str(item), str(final_target_path))
+            logging.info(f"Moving {item.name} -> {final_target_path.name} in {final_folder_name}/")
             stats.increment_count('files_moved')
         except Exception as e:
             logging.error(f"Could not move {item.name}. Reason: {e}")
             stats.increment_count('files_skipped')
     else:
         # Dry Run Logging
-        logging.info(f"[DRY-RUN] Would move {item.name} -> {final_folder_name}/{target_path.name}")
+        logging.info(f"[DRY-RUN] Would move {item.name} -> {final_folder_name}/{final_target_path.name}")
         stats.increment_count('files_moved')

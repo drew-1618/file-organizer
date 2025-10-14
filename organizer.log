@@ -1,147 +1,31 @@
-2025-10-12 22:07:11,609 - INFO - Starting organization in: test_files/
-2025-10-12 22:07:11,609 - INFO - Successfully validated and loaded 7 custom rules from config/rules.json.
-2025-10-12 22:07:11,609 - INFO - File 'sample_file_15.jpeg' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,609 - INFO - Using default rule for sample_file_15.jpeg. Target folder: Images
-2025-10-12 22:07:11,610 - INFO - Created directory: Images/
-2025-10-12 22:07:11,610 - INFO - Moving sample_file_15.jpeg -> sample_file_15.jpeg in Images/
-2025-10-12 22:07:11,610 - INFO - Using default rule for sample_file_26.wav. Target folder: Audio
-2025-10-12 22:07:11,611 - INFO - Created directory: Audio/
-2025-10-12 22:07:11,611 - INFO - Moving sample_file_26.wav -> sample_file_26.wav in Audio/
-2025-10-12 22:07:11,611 - INFO - Using default rule for sample_file_29.jpg. Target folder: Images
-2025-10-12 22:07:11,611 - INFO - Moving sample_file_29.jpg -> sample_file_29.jpg in Images/
-2025-10-12 22:07:11,611 - INFO - Using default rule for sample_file_42.bat. Target folder: Scripts
-2025-10-12 22:07:11,612 - INFO - Created directory: Scripts/
-2025-10-12 22:07:11,612 - INFO - Moving sample_file_42.bat -> sample_file_42.bat in Scripts/
-2025-10-12 22:07:11,612 - INFO - Using default rule for sample_file_41.sh. Target folder: Scripts
-2025-10-12 22:07:11,612 - INFO - Moving sample_file_41.sh -> sample_file_41.sh in Scripts/
-2025-10-12 22:07:11,612 - INFO - File 'sample_file_32.jpg' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,612 - INFO - Using default rule for sample_file_32.jpg. Target folder: Images
-2025-10-12 22:07:11,612 - INFO - Moving sample_file_32.jpg -> sample_file_32.jpg in Images/
-2025-10-12 22:07:11,612 - INFO - File 'sample_file_9.tar' matched custom rule: 'General Downloads: Archives & Zips'
-2025-10-12 22:07:11,612 - INFO - Using default rule for sample_file_9.tar. Target folder: Archives
-2025-10-12 22:07:11,613 - INFO - Created directory: Archives/
-2025-10-12 22:07:11,613 - INFO - Moving sample_file_9.tar -> sample_file_9.tar in Archives/
-2025-10-12 22:07:11,613 - INFO - File 'sample_file_33.7z' matched custom rule: 'General Downloads: Archives & Zips'
-2025-10-12 22:07:11,613 - INFO - Using default rule for sample_file_33.7z. Target folder: Archives
-2025-10-12 22:07:11,613 - INFO - Moving sample_file_33.7z -> sample_file_33.7z in Archives/
-2025-10-12 22:07:11,613 - INFO - File 'sample_file_37.png' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,613 - INFO - Using default rule for sample_file_37.png. Target folder: Images
-2025-10-12 22:07:11,613 - INFO - Moving sample_file_37.png -> sample_file_37.png in Images/
-2025-10-12 22:07:11,613 - INFO - Using default rule for sample_file_24.sh. Target folder: Scripts
-2025-10-12 22:07:11,614 - INFO - Moving sample_file_24.sh -> sample_file_24.sh in Scripts/
-2025-10-12 22:07:11,614 - INFO - File 'sample_file_28.7z' matched custom rule: 'General Downloads: Archives & Zips'
-2025-10-12 22:07:11,614 - INFO - Using default rule for sample_file_28.7z. Target folder: Archives
-2025-10-12 22:07:11,614 - INFO - Moving sample_file_28.7z -> sample_file_28.7z in Archives/
-2025-10-12 22:07:11,614 - INFO - File 'sample_file_23.doc' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,614 - INFO - Using default rule for sample_file_23.doc. Target folder: Documents
-2025-10-12 22:07:11,614 - INFO - Created directory: Documents/
-2025-10-12 22:07:11,614 - INFO - Moving sample_file_23.doc -> sample_file_23.doc in Documents/
-2025-10-12 22:07:11,614 - INFO - File 'sample_file_5.js' matched custom rule: 'Code and Scripts'
-2025-10-12 22:07:11,615 - INFO - Using default rule for sample_file_5.js. Target folder: Scripts
-2025-10-12 22:07:11,615 - INFO - Moving sample_file_5.js -> sample_file_5.js in Scripts/
-2025-10-12 22:07:11,615 - INFO - File 'sample_file_13.pdf' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,615 - INFO - Using default rule for sample_file_13.pdf. Target folder: Documents
-2025-10-12 22:07:11,615 - INFO - Moving sample_file_13.pdf -> sample_file_13.pdf in Documents/
-2025-10-12 22:07:11,615 - INFO - Using default rule for sample_file_45.svg. Target folder: Images
-2025-10-12 22:07:11,615 - INFO - Moving sample_file_45.svg -> sample_file_45.svg in Images/
-2025-10-12 22:07:11,615 - INFO - Using default rule for sample_file_38.mov. Target folder: Videos
-2025-10-12 22:07:11,616 - INFO - Created directory: Videos/
-2025-10-12 22:07:11,616 - INFO - Moving sample_file_38.mov -> sample_file_38.mov in Videos/
-2025-10-12 22:07:11,616 - INFO - Using default rule for sample_file_40.aac. Target folder: Audio
-2025-10-12 22:07:11,616 - INFO - Moving sample_file_40.aac -> sample_file_40.aac in Audio/
-2025-10-12 22:07:11,616 - INFO - Using default rule for sample_file_4.pl. Target folder: Scripts
-2025-10-12 22:07:11,616 - INFO - Moving sample_file_4.pl -> sample_file_4.pl in Scripts/
-2025-10-12 22:07:11,616 - INFO - Using default rule for sample_file_1.flac. Target folder: Audio
-2025-10-12 22:07:11,616 - INFO - Moving sample_file_1.flac -> sample_file_1.flac in Audio/
-2025-10-12 22:07:11,616 - INFO - Using default rule for sample_file_19.sh. Target folder: Scripts
-2025-10-12 22:07:11,617 - INFO - Moving sample_file_19.sh -> sample_file_19.sh in Scripts/
-2025-10-12 22:07:11,617 - INFO - Using default rule for sample_file_14.mp4. Target folder: Videos
-2025-10-12 22:07:11,617 - INFO - Moving sample_file_14.mp4 -> sample_file_14.mp4 in Videos/
-2025-10-12 22:07:11,617 - INFO - File 'sample_file_6.tiff' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,617 - INFO - Using default rule for sample_file_6.tiff. Target folder: Images
-2025-10-12 22:07:11,617 - INFO - Moving sample_file_6.tiff -> sample_file_6.tiff in Images/
-2025-10-12 22:07:11,617 - INFO - Using default rule for sample_file_11.tiff. Target folder: Images
-2025-10-12 22:07:11,617 - INFO - Moving sample_file_11.tiff -> sample_file_11.tiff in Images/
-2025-10-12 22:07:11,617 - INFO - File 'sample_file_17.docx' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,617 - INFO - Using default rule for sample_file_17.docx. Target folder: Documents
-2025-10-12 22:07:11,618 - INFO - Moving sample_file_17.docx -> sample_file_17.docx in Documents/
-2025-10-12 22:07:11,618 - INFO - File 'sample_file_3.ppt' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,618 - INFO - Using default rule for sample_file_3.ppt. Target folder: Documents
-2025-10-12 22:07:11,618 - INFO - Moving sample_file_3.ppt -> sample_file_3.ppt in Documents/
-2025-10-12 22:07:11,618 - INFO - Using default rule for sample_file_30.mp3. Target folder: Audio
-2025-10-12 22:07:11,618 - INFO - Moving sample_file_30.mp3 -> sample_file_30.mp3 in Audio/
-2025-10-12 22:07:11,618 - INFO - Using default rule for sample_file_35.gif. Target folder: Images
-2025-10-12 22:07:11,618 - INFO - Moving sample_file_35.gif -> sample_file_35.gif in Images/
-2025-10-12 22:07:11,618 - INFO - File 'sample_file_43.doc' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,618 - INFO - Using default rule for sample_file_43.doc. Target folder: Documents
-2025-10-12 22:07:11,619 - INFO - Moving sample_file_43.doc -> sample_file_43.doc in Documents/
-2025-10-12 22:07:11,619 - INFO - Using default rule for sample_file_16.gif. Target folder: Images
-2025-10-12 22:07:11,619 - INFO - Moving sample_file_16.gif -> sample_file_16.gif in Images/
-2025-10-12 22:07:11,619 - INFO - File 'sample_file_34.xls' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,619 - INFO - Using default rule for sample_file_34.xls. Target folder: Documents
-2025-10-12 22:07:11,619 - INFO - Moving sample_file_34.xls -> sample_file_34.xls in Documents/
-2025-10-12 22:07:11,619 - INFO - Using default rule for sample_file_20.wmv. Target folder: Videos
-2025-10-12 22:07:11,619 - INFO - Moving sample_file_20.wmv -> sample_file_20.wmv in Videos/
-2025-10-12 22:07:11,619 - INFO - File 'sample_file_44.jpg' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,619 - INFO - Using default rule for sample_file_44.jpg. Target folder: Images
-2025-10-12 22:07:11,619 - INFO - Moving sample_file_44.jpg -> sample_file_44.jpg in Images/
-2025-10-12 22:07:11,620 - INFO - File 'sample_file_7.png' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,620 - INFO - Using default rule for sample_file_7.png. Target folder: Images
-2025-10-12 22:07:11,620 - INFO - Moving sample_file_7.png -> sample_file_7.png in Images/
-2025-10-12 22:07:11,620 - INFO - Using default rule for sample_file_18.wmv. Target folder: Videos
-2025-10-12 22:07:11,620 - INFO - Moving sample_file_18.wmv -> sample_file_18.wmv in Videos/
-2025-10-12 22:07:11,620 - INFO - File 'sample_file_25.7z' matched custom rule: 'General Downloads: Archives & Zips'
-2025-10-12 22:07:11,620 - INFO - Using default rule for sample_file_25.7z. Target folder: Archives
-2025-10-12 22:07:11,620 - INFO - Moving sample_file_25.7z -> sample_file_25.7z in Archives/
-2025-10-12 22:07:11,620 - INFO - Using default rule for sample_file_21.pl. Target folder: Scripts
-2025-10-12 22:07:11,620 - INFO - Moving sample_file_21.pl -> sample_file_21.pl in Scripts/
-2025-10-12 22:07:11,620 - INFO - Using default rule for sample_file_39.mp3. Target folder: Audio
-2025-10-12 22:07:11,621 - INFO - Moving sample_file_39.mp3 -> sample_file_39.mp3 in Audio/
-2025-10-12 22:07:11,621 - INFO - File 'sample_file_2.ppt' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,621 - INFO - Using default rule for sample_file_2.ppt. Target folder: Documents
-2025-10-12 22:07:11,621 - INFO - Moving sample_file_2.ppt -> sample_file_2.ppt in Documents/
-2025-10-12 22:07:11,621 - INFO - File 'sample_file_10.py' matched custom rule: 'Code and Scripts'
-2025-10-12 22:07:11,621 - INFO - Using default rule for sample_file_10.py. Target folder: Scripts
-2025-10-12 22:07:11,621 - INFO - Moving sample_file_10.py -> sample_file_10.py in Scripts/
-2025-10-12 22:07:11,621 - INFO - File 'sample_file_31.jpg' matched custom rule: 'High-Res Image Sorting'
-2025-10-12 22:07:11,621 - INFO - Using default rule for sample_file_31.jpg. Target folder: Images
-2025-10-12 22:07:11,621 - INFO - Moving sample_file_31.jpg -> sample_file_31.jpg in Images/
-2025-10-12 22:07:11,621 - INFO - File 'sample_file_12.zip' matched custom rule: 'General Downloads: Archives & Zips'
-2025-10-12 22:07:11,621 - INFO - Using default rule for sample_file_12.zip. Target folder: Archives
-2025-10-12 22:07:11,622 - INFO - Moving sample_file_12.zip -> sample_file_12.zip in Archives/
-2025-10-12 22:07:11,622 - INFO - File 'sample_file_36.doc' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,622 - INFO - Using default rule for sample_file_36.doc. Target folder: Documents
-2025-10-12 22:07:11,622 - INFO - Moving sample_file_36.doc -> sample_file_36.doc in Documents/
-2025-10-12 22:07:11,622 - INFO - Using default rule for sample_file_8.svg. Target folder: Images
-2025-10-12 22:07:11,622 - INFO - Moving sample_file_8.svg -> sample_file_8.svg in Images/
-2025-10-12 22:07:11,622 - INFO - File 'sample_file_22.doc' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,622 - INFO - Using default rule for sample_file_22.doc. Target folder: Documents
-2025-10-12 22:07:11,622 - INFO - Moving sample_file_22.doc -> sample_file_22.doc in Documents/
-2025-10-12 22:07:11,622 - INFO - File 'sample_file_27.pptx' matched custom rule: 'Documents & Spreadsheets'
-2025-10-12 22:07:11,622 - INFO - Using default rule for sample_file_27.pptx. Target folder: Documents
-2025-10-12 22:07:11,622 - INFO - Moving sample_file_27.pptx -> sample_file_27.pptx in Documents/
-2025-10-12 22:07:11,622 - INFO - 
+2025-10-13 19:23:48,365 - INFO - Starting organization in: test_files/
+2025-10-13 19:23:48,366 - INFO - Successfully validated and loaded 7 custom rules from config/rules.json.
+2025-10-13 19:23:48,366 - INFO - Skipping non-file or hidden item: Archives
+2025-10-13 19:23:48,366 - INFO - Skipping non-file or hidden item: Documents
+2025-10-13 19:23:48,366 - INFO - Skipping non-file or hidden item: Videos
+2025-10-13 19:23:48,366 - INFO - Skipping non-file or hidden item: Scripts
+2025-10-13 19:23:48,366 - INFO - Skipping non-file or hidden item: Images
+2025-10-13 19:23:48,366 - INFO - Skipping non-file or hidden item: Audio
+2025-10-13 19:23:48,366 - INFO - File 'sample_file_2.ppt' matched custom rule: 'Documents & Spreadsheets'
+2025-10-13 19:23:48,366 - INFO - Using default rule for sample_file_2.ppt. Target folder: Documents
+2025-10-13 19:23:48,367 - INFO - Moving sample_file_2.ppt -> sample_file_2_2.ppt in Documents/
+2025-10-13 19:23:48,367 - INFO - 
 ------- FILE ORGANIZATION REPORT -------
 
 --- SUMMARY ---
-	Total files processed: 45
-	Total data processed: 124.47 MB
-	Directories created: 6
+	Total files processed: 1
+	Total data processed: 0 Bytes
+	Directories created: 0
 
 --- ACTION BREAKDOWN ---
-	Files moved: 45
+	Files moved: 1
 	Files deleted: 0
 	Files skipped: 0
 	Files renamed: 0
 
---- FILE TYPE BREAKDOWN (27 unique counts) ---
-	.jpg: 4 files
-	.doc: 4 files
-	.sh: 3 files
-	.7z: 3 files
-	.png: 2 files
-	.Other types: 29 files
+--- FILE TYPE BREAKDOWN (1 unique counts) ---
+	.ppt: 1 files
 
 ----------------------------------------
 
-2025-10-12 22:07:11,622 - INFO - Organization complete.
+2025-10-13 19:23:48,367 - INFO - Organization complete.
