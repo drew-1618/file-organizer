@@ -6,3 +6,5 @@ test_files/
 
 venv/
 .env
+
+organizer.log
