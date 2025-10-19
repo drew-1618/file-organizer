@@ -1,15 +1,14 @@
-2025-10-18 20:05:45,508 - INFO - Starting organization in: /home/andrew/dev/personal/file-organizer/test_source_dir
-2025-10-18 20:05:45,508 - INFO - Successfully validated and loaded 1 custom rules from config/rules.json.
-2025-10-18 20:05:45,508 - INFO - File 'test_file.pdf' matched custom rule: 'Documents & Spreadsheets'
-2025-10-18 20:05:45,509 - INFO - Created directory: Documents/
-2025-10-18 20:05:45,509 - INFO - Moving test_file.pdf -> test_file.pdf in Documents/
-2025-10-18 20:05:45,509 - INFO - 
+2025-10-19 12:39:47,695 - INFO - Starting organization in: /home/andrew/dev/personal/file-organizer/test_source_dir
+2025-10-19 12:39:47,695 - INFO - Successfully validated and loaded 1 custom rules from config/rules.json.
+2025-10-19 12:39:47,695 - INFO - File 'test_file.pdf' matched custom rule: 'Documents & Spreadsheets'
+2025-10-19 12:39:47,696 - INFO - [DRY-RUN] Would move test_file.pdf -> Documents/test_file.pdf
+2025-10-19 12:39:47,696 - INFO - 
 ------- FILE ORGANIZATION REPORT -------
 
 --- SUMMARY ---
 	Total files processed: 1
 	Total data processed: 0 Bytes
-	Directories created: 1
+	Directories created: 0
 
 --- ACTION BREAKDOWN ---
 	Files moved: 1
@@ -22,4 +21,4 @@
 
 ----------------------------------------
 
-2025-10-18 20:05:45,509 - INFO - Organization complete.
+2025-10-19 12:39:47,696 - INFO - Organization complete.
