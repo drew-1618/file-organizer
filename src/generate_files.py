@@ -6,7 +6,7 @@ from time import time
 import os
 import argparse
 
-from src.file_manager import get_config, CONFIG_FILE
+from file_manager import get_config, CONFIG_FILE
 
 SECONDS_IN_90_DAYS = 90 * 24 * 3600
 SECONDS_IN_30_DAYS = 30 * 24 * 3600

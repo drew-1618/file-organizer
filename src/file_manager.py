@@ -141,6 +141,7 @@ def _execute_move(item, target_folder, target_path, final_folder_name, final_fil
 
     if not dry_run:
         try:
+            target_folder.mkdir(exist_ok=True)
             shutil.move(str(item), str(final_target_path))
             logging.info(f"Moving {item.name} -> {final_target_path.name} in {final_folder_name}/")
             stats.increment_count('files_moved')

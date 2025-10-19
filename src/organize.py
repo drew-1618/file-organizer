@@ -134,7 +134,7 @@ def organize_files(source_dir, dry_run=False, in_place=False, min_size_mb=0, dat
 
         if matching_rule:
             rule_action = matching_rule['action']
-            target_folder_name = rule_action.get('move_to')
+            target_folder_name = rule_action.get('move')
 
             if 'rename_prefix' in rule_action:
                 prefix = rule_action['rename_prefix']
