@@ -14,4 +14,16 @@ Scenario: A dry run execution does not move files
     When the organizer is run with the "--dry-run" flag(s)
     Then the "Documents" folder should not exist
     And the "pdf" file should be in the source directory
+
+Scenario: File is moved and renamed with date modified prefixing
+    Given a file of type "pdf" exists in the source directory
+    When the organizer is run with the "--date-prefixing modified" flag(s)
+    Then the "Documents" folder should exist
+    And the file should be in the "Documents" folder with date "modified" prefixing
+    
+Scenario: File is moved and renamed with date created prefixing
+    Given a file of type "pdf" exists in the source directory
+    When the organizer is run with the "--date-prefixing created" flag(s)
+    Then the "Documents" folder should exist
+    And the file should be in the "Documents" folder with date "created" prefixing
     

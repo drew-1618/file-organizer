@@ -1,14 +1,16 @@
-2025-10-19 12:39:47,695 - INFO - Starting organization in: /home/andrew/dev/personal/file-organizer/test_source_dir
-2025-10-19 12:39:47,695 - INFO - Successfully validated and loaded 1 custom rules from config/rules.json.
-2025-10-19 12:39:47,695 - INFO - File 'test_file.pdf' matched custom rule: 'Documents & Spreadsheets'
-2025-10-19 12:39:47,696 - INFO - [DRY-RUN] Would move test_file.pdf -> Documents/test_file.pdf
-2025-10-19 12:39:47,696 - INFO - 
+2025-10-19 18:03:34,056 - INFO - Starting organization in: /home/andrew/dev/personal/file-organizer/test_source_dir
+2025-10-19 18:03:34,056 - ERROR - Failed to parse rules file rules.json. Check JSON syntax. Error: Expecting value: line 1 column 1 (char 0). Proceeding with default behavior.
+2025-10-19 18:03:34,056 - INFO - Date prefixing: Active. Files will be prefixed with their creation date.
+2025-10-19 18:03:34,057 - INFO - Using default rule for test_file.pdf. Target folder: Documents
+2025-10-19 18:03:34,057 - INFO - Created directory: Documents/
+2025-10-19 18:03:34,057 - INFO - Moving test_file.pdf -> 2025-10-19_test_file.pdf in Documents/
+2025-10-19 18:03:34,057 - INFO - 
 ------- FILE ORGANIZATION REPORT -------
 
 --- SUMMARY ---
 	Total files processed: 1
 	Total data processed: 0 Bytes
-	Directories created: 0
+	Directories created: 1
 
 --- ACTION BREAKDOWN ---
 	Files moved: 1
@@ -21,4 +23,4 @@
 
 ----------------------------------------
 
-2025-10-19 12:39:47,696 - INFO - Organization complete.
+2025-10-19 18:03:34,058 - INFO - Organization complete.

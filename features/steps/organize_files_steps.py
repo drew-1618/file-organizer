@@ -3,6 +3,7 @@ import shutil
 import subprocess
 import sys
 import os
+import glob
 
 from behave import given, when, then
 
@@ -61,3 +62,10 @@ def step_impl(context, ext, folder_name):
 def step_impl(context, ext):
     expected_file_path = context.source_dir / context.filename
     assert expected_file_path.is_file(), f"Expected file {expected_file_path} does not exist."
+
+@then('the file should be in the "{folder_name}" folder with date "{status}" prefixing')
+def step_impl(context, folder_name, status):
+    destination_folder = context.source_dir / folder_name
+    search_pattern = f"*-*-*_{context.filename}"
+    found_files = list(destination_folder.glob(search_pattern))
+    assert len(found_files) == 1, f"Expected exactly one date-prefixed file but instead found {len(found_files)}"

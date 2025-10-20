@@ -47,7 +47,7 @@ def setup_parser():
         '--fallback-mode', 
         type=str, 
         choices=['default', 'prompt', 'skip'], 
-        default='skip', 
+        default='default', 
         help='Behavior for files not matching any custom rule: "default" (use config.json), "prompt" (ask user), or "skip". Default is "skip".',
         metavar='MODE'
     )
