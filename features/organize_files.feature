@@ -26,4 +26,15 @@ Scenario: File is moved and renamed with date created prefixing
     When the organizer is run with the "--date-prefixing created" flag(s)
     Then the "Documents" folder should exist
     And the file should be in the "Documents" folder with date "created" prefixing
-    
+
+Scenario: Multiple files of different types are moved to their correct categories
+    Given a file of type "pdf" exists in the source directory
+    And a file of type "jpg" exists in the source directory
+    And a file of type "mp4" exists in the source directory
+    When the organizer is run
+    Then the "Documents" folder should exist
+    And the "pdf" file should be in the "Documents" folder
+    And the "Images" folder should exist
+    And the "jpg" file should be in the "Images" folder
+    And the "Videos" folder should exist
+    And the "mp4" file should be in the "Videos" folder

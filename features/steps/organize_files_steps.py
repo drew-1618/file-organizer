@@ -26,10 +26,11 @@ def _execute_organizer(context):
 
 @given('a file of type "{ext}" exists in the source directory')
 def step_impl(context, ext):
-    # define temp directory path
-    context.source_dir = Path("test_source_dir")
-    context.source_dir.mkdir(exist_ok=True)
-    context.filename = f"test_file.{ext}"
+    if not hasattr(context, 'files_created'):
+        context.files_created = {}
+
+    context.filename = f"test_file.{ext}" 
+    context.files_created[ext] = context.filename
     file_path = context.source_dir / context.filename
     file_path.touch()
 
@@ -55,7 +56,8 @@ def step_impl(context, folder_name):
 
 @then('the "{ext}" file should be in the "{folder_name}" folder')
 def step_impl(context, ext, folder_name):
-    expected_file_path = context.source_dir / folder_name / context.filename
+    file_name_to_check = context.files_created[ext]
+    expected_file_path = context.source_dir / folder_name / file_name_to_check
     assert expected_file_path.is_file(), f"Expected file {expected_file_path} does not exist."
 
 @then('the "{ext}" file should be in the source directory')
