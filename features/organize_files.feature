@@ -45,3 +45,11 @@ Scenario: A file conflict is resolved by renaming the moved file
     When the organizer is run
     Then the "Documents" folder should exist
     And the "Documents" folder should contain two "pdf" files
+
+Scenario: Uncategorized files are moved to the Miscellaneous folder
+    Given a file of type "pdf" exists in the source directory
+    And a file of type "dat" exists in the source directory
+    When the organizer is run
+    Then the "Documents" folder should exist
+    And the "pdf" file should be in the "Documents" folder
+    And the "dat" file should be in the "Miscellaneous" folder

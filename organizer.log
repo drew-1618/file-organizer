@@ -1,25 +1,29 @@
-2025-10-26 13:07:22,003 - INFO - Starting organization in: /tmp/behave_temp/source
-2025-10-26 13:07:22,004 - ERROR - Failed to parse rules file rules.json. Check JSON syntax. Error: Expecting value: line 1 column 1 (char 0). Proceeding with default behavior.
-2025-10-26 13:07:22,004 - INFO - Skipping non-file or hidden item: Documents
-2025-10-26 13:07:22,004 - INFO - Using default rule for test_file.pdf. Target folder: Documents
-2025-10-26 13:07:22,005 - INFO - Moving test_file.pdf -> test_file.pdf in Documents/
-2025-10-26 13:07:22,005 - INFO - 
+2025-10-26 13:31:45,700 - INFO - Starting organization in: /tmp/behave_temp/source
+2025-10-26 13:31:45,700 - ERROR - Failed to parse rules file rules.json. Check JSON syntax. Error: Expecting value: line 1 column 1 (char 0). Proceeding with default behavior.
+2025-10-26 13:31:45,701 - INFO - Using default rule for test_file.pdf. Target folder: Documents
+2025-10-26 13:31:45,702 - INFO - Created directory: Documents/
+2025-10-26 13:31:45,702 - INFO - Moving test_file.pdf -> test_file.pdf in Documents/
+2025-10-26 13:31:45,702 - INFO - Using default rule for test_file.dat. Target folder: Miscellaneous
+2025-10-26 13:31:45,703 - INFO - Created directory: Miscellaneous/
+2025-10-26 13:31:45,703 - INFO - Moving test_file.dat -> test_file.dat in Miscellaneous/
+2025-10-26 13:31:45,704 - INFO - 
 ------- FILE ORGANIZATION REPORT -------
 
 --- SUMMARY ---
-	Total files processed: 1
+	Total files processed: 2
 	Total data processed: 0 Bytes
-	Directories created: 0
+	Directories created: 2
 
 --- ACTION BREAKDOWN ---
-	Files moved: 1
+	Files moved: 2
 	Files deleted: 0
 	Files skipped: 0
 	Files renamed: 0
 
---- FILE TYPE BREAKDOWN (1 unique counts) ---
+--- FILE TYPE BREAKDOWN (2 unique counts) ---
 	.pdf: 1 files
+	.dat: 1 files
 
 ----------------------------------------
 
-2025-10-26 13:07:22,005 - INFO - Organization complete.
+2025-10-26 13:31:45,704 - INFO - Organization complete.
