@@ -34,25 +34,30 @@ def step_impl(context, ext):
     file_path = context.source_dir / context.filename
     file_path.touch()
 
+
 @when('the organizer is run')
 def step_impl(context):
     context.flags = []
     _execute_organizer(context)
+
 
 @when('the organizer is run with the "{flags:Flags}" flag(s)')
 def step_impl(context, flags):
     context.flags = flags
     _execute_organizer(context)
 
+
 @then('the "{folder_name}" folder should exist')
 def step_impl(context, folder_name):
     expected_folder_path = context.source_dir / folder_name
     assert expected_folder_path.is_dir(), f"Expected directory {expected_folder_path} does not exist."
 
+
 @then('the "{folder_name}" folder should not exist')
 def step_impl(context, folder_name):
     expected_folder_path = context.source_dir / folder_name
     assert not expected_folder_path.is_dir(), f"Expected directory {expected_folder_path} does exist."
+
 
 @then('the "{ext}" file should be in the "{folder_name}" folder')
 def step_impl(context, ext, folder_name):
@@ -60,10 +65,12 @@ def step_impl(context, ext, folder_name):
     expected_file_path = context.source_dir / folder_name / file_name_to_check
     assert expected_file_path.is_file(), f"Expected file {expected_file_path} does not exist."
 
+
 @then('the "{ext}" file should be in the source directory')
 def step_impl(context, ext):
     expected_file_path = context.source_dir / context.filename
     assert expected_file_path.is_file(), f"Expected file {expected_file_path} does not exist."
+
 
 @then('the file should be in the "{folder_name}" folder with date "{status}" prefixing')
 def step_impl(context, folder_name, status):
