@@ -38,3 +38,10 @@ Scenario: Multiple files of different types are moved to their correct categorie
     And the "jpg" file should be in the "Images" folder
     And the "Videos" folder should exist
     And the "mp4" file should be in the "Videos" folder
+
+Scenario: A file conflict is resolved by renaming the moved file
+    Given a file of type "pdf" exists in the source directory
+    And a "Documents" folder exists with a "pdf" file already in it
+    When the organizer is run
+    Then the "Documents" folder should exist
+    And the "Documents" folder should contain two "pdf" files

@@ -1,33 +1,25 @@
-2025-10-25 15:19:43,587 - INFO - Starting organization in: /tmp/behave_temp/source
-2025-10-25 15:19:43,587 - ERROR - Failed to parse rules file rules.json. Check JSON syntax. Error: Expecting value: line 1 column 1 (char 0). Proceeding with default behavior.
-2025-10-25 15:19:43,587 - INFO - Using default rule for test_file.jpg. Target folder: Images
-2025-10-25 15:19:43,588 - INFO - Created directory: Images/
-2025-10-25 15:19:43,588 - INFO - Moving test_file.jpg -> test_file.jpg in Images/
-2025-10-25 15:19:43,588 - INFO - Using default rule for test_file.pdf. Target folder: Documents
-2025-10-25 15:19:43,589 - INFO - Created directory: Documents/
-2025-10-25 15:19:43,589 - INFO - Moving test_file.pdf -> test_file.pdf in Documents/
-2025-10-25 15:19:43,589 - INFO - Using default rule for test_file.mp4. Target folder: Videos
-2025-10-25 15:19:43,589 - INFO - Created directory: Videos/
-2025-10-25 15:19:43,589 - INFO - Moving test_file.mp4 -> test_file.mp4 in Videos/
-2025-10-25 15:19:43,589 - INFO - 
+2025-10-26 13:07:22,003 - INFO - Starting organization in: /tmp/behave_temp/source
+2025-10-26 13:07:22,004 - ERROR - Failed to parse rules file rules.json. Check JSON syntax. Error: Expecting value: line 1 column 1 (char 0). Proceeding with default behavior.
+2025-10-26 13:07:22,004 - INFO - Skipping non-file or hidden item: Documents
+2025-10-26 13:07:22,004 - INFO - Using default rule for test_file.pdf. Target folder: Documents
+2025-10-26 13:07:22,005 - INFO - Moving test_file.pdf -> test_file.pdf in Documents/
+2025-10-26 13:07:22,005 - INFO - 
 ------- FILE ORGANIZATION REPORT -------
 
 --- SUMMARY ---
-	Total files processed: 3
+	Total files processed: 1
 	Total data processed: 0 Bytes
-	Directories created: 3
+	Directories created: 0
 
 --- ACTION BREAKDOWN ---
-	Files moved: 3
+	Files moved: 1
 	Files deleted: 0
 	Files skipped: 0
 	Files renamed: 0
 
---- FILE TYPE BREAKDOWN (3 unique counts) ---
-	.jpg: 1 files
+--- FILE TYPE BREAKDOWN (1 unique counts) ---
 	.pdf: 1 files
-	.mp4: 1 files
 
 ----------------------------------------
 
-2025-10-25 15:19:43,590 - INFO - Organization complete.
+2025-10-26 13:07:22,005 - INFO - Organization complete.

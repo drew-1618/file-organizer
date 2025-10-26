@@ -35,6 +35,18 @@ def step_impl(context, ext):
     file_path.touch()
 
 
+@given('a "{folder_name}" folder exists with a "{ext}" file already in it')
+def step_impl(context, folder_name, ext):
+    folder_path = context.source_dir / folder_name
+    folder_path.mkdir(parents=True, exist_ok=True)
+
+    existing_file_name = f"existing_file.{ext}"
+    existing_file_path = folder_path / existing_file_name
+    existing_file_path.touch()
+
+    assert existing_file_path.is_file(), f"Setup failed: {existing_file_path} was not created."
+
+
 @when('the organizer is run')
 def step_impl(context):
     context.flags = []
@@ -78,3 +90,11 @@ def step_impl(context, folder_name, status):
     search_pattern = f"*-*-*_{context.filename}"
     found_files = list(destination_folder.glob(search_pattern))
     assert len(found_files) == 1, f"Expected exactly one date-prefixed file but instead found {len(found_files)}"
+
+
+@then('the "{folder_name}" folder should contain two "{ext}" files')
+def step_impl(context, folder_name, ext):
+    destination_folder = context.source_dir / folder_name
+    search_pattern = f"*.{ext}"
+    found_files = list(destination_folder.glob(search_pattern))
+    assert len(found_files) == 2, f"Expected exactly two .{ext} files but instead found len(found_files).\n Files found: {found_files}"
